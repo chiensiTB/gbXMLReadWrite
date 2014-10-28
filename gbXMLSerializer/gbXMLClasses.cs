@@ -1548,11 +1548,11 @@ namespace gbXMLSerializer
         [XmlElement]
         public SolarHeatGainCoeff[] SolarHeatGainCoeff { get; set; }
         [XmlElement]
-        public Transmittance Transmittance { get; set; }
+        public Transmittance[] Transmittance { get; set; }
         [XmlElement]
-        public Reflectance Reflectance { get; set; }
+        public Reflectance[] Reflectance { get; set; }
         [XmlElement]
-        public Emittance Emittance { get; set; }
+        public Emittance[] Emittance { get; set; }
         //Gaps and Glazing from outside to Inside
         [XmlElement]
         public Gap[] Gap { get; set; }

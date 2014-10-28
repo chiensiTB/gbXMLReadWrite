@@ -9,7 +9,7 @@ using VectorMath;
 
 namespace gbXMLSerializer
 {
-    
+
 
     public class BasicSerialization
     {
@@ -19,7 +19,7 @@ namespace gbXMLSerializer
             public List<int> indices { get; set; }
         }
 
-        
+
         //needed  to store all unique planes in the project
         public static List<PlanarGeometry> uniquesurf = new List<PlanarGeometry>();
         public static Dictionary<string, PlanarGeometry> uniqueplanes = new Dictionary<string, PlanarGeometry>();
@@ -56,7 +56,7 @@ namespace gbXMLSerializer
 
             //Define the building(s) on the site
             //CHarriman Septempber 19 2013
-            cmp.Buildings[0] = MakeBuilding(2000);
+            cmp.Buildings[0] = MakeBuilding(2000, "bldg-1", buildingTypeEnum.DiningBarLoungeOrLeisure);
 
             //CHarriman September 19 2013
             //define the stories for each building
@@ -69,12 +69,12 @@ namespace gbXMLSerializer
             List<Space> gbSpaces = new List<Space>();
             gbSpaces = MakeSpacesFromEPObj(myspace);
 
-            
+
             for (int spacecount = 0; spacecount < gbSpaces.Count(); spacecount++)
             {
                 cmp.Buildings[0].Spaces[spacecount] = gbSpaces[spacecount];
             }
-                
+
 
             //after making all the spaces, I make the surfaces
             cmp.Surface = new Surface[uniquesurfaces.Count()];
@@ -144,29 +144,29 @@ namespace gbXMLSerializer
 
 
                 PeopleNumber pn = new PeopleNumber();
-                pn.peopleunits = peopleNumberUnitEnum.NumberOfPeople;
+                pn.unit = peopleNumberUnitEnum.NumberOfPeople;
 
                 string people = gb.FormatDoubleToString(zespace.peoplenum);
                 pn.valuefield = people;
                 zespace.PeopleNumber = pn;
 
                 PeopleHeatGain phg = new PeopleHeatGain();
-                phg.loadunits = peopleHeatGainUnitEnum.BtuPerHourPerson;
-                phg.loadtype = peopleHeatGainTypeEnum.Total;
+                phg.unit = peopleHeatGainUnitEnum.BtuPerHourPerson;
+                phg.heatGainType = peopleHeatGainTypeEnum.Total;
                 string totalpopload = gb.FormatDoubleToString(zespace.totalpeoplegain);
                 phg.value = totalpopload;
                 zespace.PeopleHeatGains[0] = phg;
 
                 PeopleHeatGain shg = new PeopleHeatGain();
-                shg.loadunits = peopleHeatGainUnitEnum.BtuPerHourPerson;
-                shg.loadtype = peopleHeatGainTypeEnum.Sensible;
+                shg.unit = peopleHeatGainUnitEnum.BtuPerHourPerson;
+                shg.heatGainType = peopleHeatGainTypeEnum.Sensible;
                 string senspopload = gb.FormatDoubleToString(zespace.senspeoplegain);
                 shg.value = senspopload;
                 zespace.PeopleHeatGains[1] = shg;
 
                 PeopleHeatGain lhg = new PeopleHeatGain();
-                lhg.loadunits = peopleHeatGainUnitEnum.BtuPerHourPerson;
-                lhg.loadtype = peopleHeatGainTypeEnum.Latent;
+                lhg.unit = peopleHeatGainUnitEnum.BtuPerHourPerson;
+                lhg.heatGainType = peopleHeatGainTypeEnum.Latent;
                 string latpopload = gb.FormatDoubleToString(zespace.latpeoplegain);
                 lhg.value = latpopload;
                 zespace.PeopleHeatGains[2] = lhg;
@@ -262,7 +262,7 @@ namespace gbXMLSerializer
         public static Space assignSimpleDefaults(Space zespace, int zonecount)
         {
             CultureInfo ci = new CultureInfo(String.Empty);
-            
+
             try
             {
                 //area and volume should already be computed
@@ -276,54 +276,54 @@ namespace gbXMLSerializer
 
                 zespace.peoplenum = zespace.Area / 150;
                 PeopleNumber pn = new PeopleNumber();
-                pn.peopleunits = peopleNumberUnitEnum.NumberOfPeople;
-                pn.valuefield = (zespace.Area/150).ToString();
+                pn.unit = peopleNumberUnitEnum.NumberOfPeople;
+                pn.valuefield = (zespace.Area / 150).ToString();
                 zespace.PeopleNumber = pn;
 
                 zespace.PeopleHeatGains = new PeopleHeatGain[3];
 
                 zespace.totalpeoplegain = 450;
                 PeopleHeatGain tph = new PeopleHeatGain();
-                tph.loadtype = peopleHeatGainTypeEnum.Total;
-                tph.loadunits = peopleHeatGainUnitEnum.BtuPerHourPerson;
-                tph.value = string.Format(ci, "{0:0.000000}","450");
+                tph.heatGainType = peopleHeatGainTypeEnum.Total;
+                tph.unit = peopleHeatGainUnitEnum.BtuPerHourPerson;
+                tph.value = string.Format(ci, "{0:0.000000}", "450");
                 zespace.PeopleHeatGains[0] = tph;
 
                 zespace.senspeoplegain = 250;
                 PeopleHeatGain sph = new PeopleHeatGain();
-                sph.loadtype = peopleHeatGainTypeEnum.Sensible;
-                sph.loadunits = peopleHeatGainUnitEnum.BtuPerHourPerson;
-                sph.value = string.Format(ci, "{0:0.000000}","250");
+                sph.heatGainType = peopleHeatGainTypeEnum.Sensible;
+                sph.unit = peopleHeatGainUnitEnum.BtuPerHourPerson;
+                sph.value = string.Format(ci, "{0:0.000000}", "250");
                 zespace.PeopleHeatGains[1] = sph;
 
                 zespace.latpeoplegain = 200;
                 PeopleHeatGain lph = new PeopleHeatGain();
-                lph.loadtype = peopleHeatGainTypeEnum.Latent;
-                lph.loadunits = peopleHeatGainUnitEnum.BtuPerHourPerson;
-                lph.value = string.Format(ci, "{0:0.000000}","200");
+                lph.heatGainType = peopleHeatGainTypeEnum.Latent;
+                lph.unit = peopleHeatGainUnitEnum.BtuPerHourPerson;
+                lph.value = string.Format(ci, "{0:0.000000}", "200");
                 zespace.PeopleHeatGains[2] = lph;
 
                 zespace.lpd = 1.2;
                 LightPowerPerArea lp = new LightPowerPerArea();
                 lp.unit = powerPerAreaUnitEnum.WattPerSquareFoot;
-                lp.lpd = string.Format(ci, "{0:0.000000}","1.2");
+                lp.lpd = string.Format(ci, "{0:0.000000}", "1.2");
                 zespace.LightPowerPerArea = lp;
 
                 zespace.epd = 1.5;
                 EquipPowerPerArea ep = new EquipPowerPerArea();
                 ep.unit = powerPerAreaUnitEnum.WattPerSquareFoot;
-                ep.epd = string.Format(ci, "{0:0.000000}","1.5");
+                ep.epd = string.Format(ci, "{0:0.000000}", "1.5");
                 zespace.EquipPowerPerArea = ep;
 
                 Area a = new Area();
-                a.val = string.Format(ci, "{0:0.000000}",zespace.Area.ToString());
+                a.val = string.Format(ci, "{0:0.000000}", zespace.Area.ToString());
                 zespace.spacearea = a;
 
                 Volume v = new Volume();
-                v.val = string.Format(ci, "{0:0.000000}",zespace.Volume.ToString());
+                v.val = string.Format(ci, "{0:0.000000}", zespace.Volume.ToString());
                 zespace.spacevol = v;
 
-                
+
                 //everything is prepared for geometry
                 zespace.PlanarGeo = new PlanarGeometry();
                 zespace.ShellGeo = new ShellGeometry();
@@ -353,6 +353,11 @@ namespace gbXMLSerializer
             return new SpaceBoundary[size];
         }
 
+        public static PeopleHeatGain[] makePeopleHeatGainAray(int size)
+        {
+            return new PeopleHeatGain[size];
+        }
+
         public static Absorptance[] makeAbsorptanceArray(int size)
         {
             return new Absorptance[size];
@@ -376,6 +381,36 @@ namespace gbXMLSerializer
         public static BuildingStorey[] setLevelsArray(int size)
         {
             return new BuildingStorey[size];
+        }
+
+        public static ScheduleValue[] setScheduleValuesArray(int size)
+        {
+            return new ScheduleValue[size];
+        }
+
+        public static Schedule[] setScheduleArray(int size)
+        {
+            return new Schedule[size];
+        }
+
+        public static WeekSchedule[] setWeekScheduleArray(int size)
+        {
+            return new WeekSchedule[size];
+        }
+
+        public static DaySchedule[] setDayScheduleArray(int size)
+        {
+            return new DaySchedule[size];
+        }
+
+        public static Day[] setDayArray(int size)
+        {
+            return new Day[size];
+        }
+
+        public static YearSchedule[] setYearScheduleArray(int size)
+        {
+            return new YearSchedule[size];
         }
 
         public static Surface[] defSurfaceArray(int size)
@@ -449,26 +484,37 @@ namespace gbXMLSerializer
             return new Glaze[size];
         }
 
+        public static SolarHeatGainCoeff[] defSolarHeatGainArray(int size)
+        {
+            return new SolarHeatGainCoeff[size];
+        }
+
         public static Gap[] defGapArray(int size)
         {
             return new Gap[size];
         }
-        public static Building MakeBuilding(double bldarea)
+        public static Building MakeBuilding(double bldarea, string bldgname, buildingTypeEnum bldgType)
         {
             Building zeb = new Building();
             zeb.Area = bldarea;
+            zeb.id = bldgname;
+            zeb.buildingType = bldgType;
             //this has been arbitrarily defined and could be changed
             zeb.bldgStories = new BuildingStorey[1000];
             zeb.Spaces = new Space[10000];
             return zeb;
         }
 
-        public static List<Building> MakeBuildings(List<double> bldareas)
+        public static List<Building> MakeBuildings(List<double> bldareas, List<buildingTypeEnum> types)
         {
             List<Building> blds = new List<Building>();
-            foreach (double area in bldareas)
+            int bldgcount = 1;
+            for (int i = 0; i < bldareas.Count(); i++)
             {
-                blds.Add(MakeBuilding(area));
+                string bldgid = "bldg-" + bldgcount;
+                var area = bldareas[i];
+                var type = types[i];
+                blds.Add(MakeBuilding(area, bldgid, type));
             }
             return blds;
         }
@@ -592,7 +638,7 @@ namespace gbXMLSerializer
             Vector.MemorySafe_CartVect RHRVector = Vector.GetMemRHR(surfacecoords);
             if (Math.Abs(RHRVector.X) == 0 && RHRVector.Y == 0 && RHRVector.Z == -1)
             {
-                
+
                 for (int sccount = 0; sccount < surfacecoords.Count; sccount++)
                 {
                     if (sccount == 0)
@@ -641,7 +687,7 @@ namespace gbXMLSerializer
             Vector.MemorySafe_CartVect RHRVector = Vector.GetMemRHR(surfacecoords);
             if (Math.Abs(RHRVector.X) == 0 && RHRVector.Y == 0 && RHRVector.Z == 1)
             {
-                
+
                 for (int sccount = 0; sccount < surfacecoords.Count; sccount++)
                 {
                     if (sccount == 0)
@@ -676,17 +722,17 @@ namespace gbXMLSerializer
             ll.indices.Add(surfindex);
             return ll;
         }
-        
+
         //Reminder to factor in CADAzimuth if appropriate
         public static LLRet GetLLForOpening(List<Vector.MemorySafe_CartCoord> surfacecoords, List<Vector.MemorySafe_CartCoord> openingcoords)
         {
 
             LLRet ll = new LLRet();
             ll.indices = new List<int>();
-            int surfindex=-1;
-            int opindex=-1;
+            int surfindex = -1;
+            int opindex = -1;
             CartesianPoint cp = new CartesianPoint();
-            
+
             //we want to verify that this is indeed correct
             //west-facing
 
@@ -708,7 +754,7 @@ namespace gbXMLSerializer
                     //get lower left...most lowest(smallest Z), then most left (largest Y)
                     if (surfacecoords[sccount].Z <= llsurf.Z)
                     {
-                        if(surfacecoords[sccount].Y > llsurf.Y)
+                        if (surfacecoords[sccount].Y > llsurf.Y)
                         {
                             llsurf.X = surfacecoords[sccount].X;
                             llsurf.Y = surfacecoords[sccount].Y;
@@ -732,7 +778,7 @@ namespace gbXMLSerializer
                     //get lower left...most low(lowest Z), then most left (largest Y)
                     if (openingcoords[occount].Z <= llopening.Z)
                     {
-                        if(openingcoords[occount].Y > llopening.Y)
+                        if (openingcoords[occount].Y > llopening.Y)
                         {
                             llopening.X = openingcoords[occount].X;
                             llopening.Y = openingcoords[occount].Y;
@@ -743,7 +789,7 @@ namespace gbXMLSerializer
                 }
                 double diffX = Math.Abs(llsurf.Y - llopening.Y);
                 double diffY = Math.Abs(llopening.Z - llsurf.Z);
-                Vector.MemorySafe_CartCoord LLeft = new Vector.MemorySafe_CartCoord(diffX,diffY,0);
+                Vector.MemorySafe_CartCoord LLeft = new Vector.MemorySafe_CartCoord(diffX, diffY, 0);
                 cp = makegbCartesianPt(LLeft);
             }
             //north-facing
@@ -764,7 +810,7 @@ namespace gbXMLSerializer
                     //get lower left...most low(smallest Z), then most left (largest X)
                     if (surfacecoords[sccount].Z <= llsurf.Z)
                     {
-                        if(surfacecoords[sccount].X > llsurf.X)
+                        if (surfacecoords[sccount].X > llsurf.X)
                         {
                             llsurf.X = surfacecoords[sccount].X;
                             llsurf.Y = surfacecoords[sccount].Y;
@@ -788,7 +834,7 @@ namespace gbXMLSerializer
                     //get lower left...most low(smallest Z), then most left (largest X)
                     if (openingcoords[occount].Z <= llopening.Z)
                     {
-                        if(openingcoords[occount].X > llopening.X)
+                        if (openingcoords[occount].X > llopening.X)
                         {
                             llopening.X = openingcoords[occount].X;
                             llopening.Y = openingcoords[occount].Y;
@@ -799,8 +845,8 @@ namespace gbXMLSerializer
                 }
                 double diffX = Math.Abs(llsurf.X - llopening.X);
                 double diffY = Math.Abs(llsurf.Z - llopening.Z);
-                Vector.MemorySafe_CartCoord LLeft = new Vector.MemorySafe_CartCoord(diffX,diffY,0);
-                cp= makegbCartesianPt(LLeft);
+                Vector.MemorySafe_CartCoord LLeft = new Vector.MemorySafe_CartCoord(diffX, diffY, 0);
+                cp = makegbCartesianPt(LLeft);
             }
             //south-facing
             else if (Math.Abs(RHRVector.X) == 0 && RHRVector.Y == -1 && RHRVector.Z == 0)
@@ -819,7 +865,7 @@ namespace gbXMLSerializer
                     //get lower left...most low(smaller Z), then most left (smallest X)
                     if (surfacecoords[sccount].Z <= llsurf.Z)
                     {
-                        if(surfacecoords[sccount].X < llsurf.X)
+                        if (surfacecoords[sccount].X < llsurf.X)
                         {
                             llsurf.X = surfacecoords[sccount].X;
                             llsurf.Y = surfacecoords[sccount].Y;
@@ -843,7 +889,7 @@ namespace gbXMLSerializer
                     //get lower left...most low(smallest Z), then most left (smallest X)
                     if (openingcoords[occount].Z <= llopening.Z)
                     {
-                        if(openingcoords[occount].X < llopening.X)
+                        if (openingcoords[occount].X < llopening.X)
                         {
                             llopening.X = openingcoords[occount].X;
                             llopening.Y = openingcoords[occount].Y;
@@ -854,7 +900,7 @@ namespace gbXMLSerializer
                 }
                 double diffX = Math.Abs(llsurf.X - llopening.X);
                 double diffY = Math.Abs(llsurf.Z - llopening.Z);
-                Vector.MemorySafe_CartCoord LLeft = new Vector.MemorySafe_CartCoord(diffX,diffY,0);
+                Vector.MemorySafe_CartCoord LLeft = new Vector.MemorySafe_CartCoord(diffX, diffY, 0);
                 cp = makegbCartesianPt(LLeft);
             }
 
@@ -875,7 +921,7 @@ namespace gbXMLSerializer
                     //get lower left...most low(smaller Z), then most left (smallest Y)
                     if (surfacecoords[sccount].Z <= llsurf.Z)
                     {
-                        if(surfacecoords[sccount].Y < llsurf.Y)
+                        if (surfacecoords[sccount].Y < llsurf.Y)
                         {
                             llsurf.X = surfacecoords[sccount].X;
                             llsurf.Y = surfacecoords[sccount].Y;
@@ -899,7 +945,7 @@ namespace gbXMLSerializer
                     //get lower left...most low(smallest Z), then most left (smallest Y)
                     if (openingcoords[occount].Z <= llopening.Z)
                     {
-                        if(openingcoords[occount].Y < llopening.Y)
+                        if (openingcoords[occount].Y < llopening.Y)
                         {
                             llopening.X = openingcoords[occount].X;
                             llopening.Y = openingcoords[occount].Y;
@@ -910,7 +956,7 @@ namespace gbXMLSerializer
                 }
                 double diffX = Math.Abs(llsurf.Y - llopening.Y);
                 double diffY = Math.Abs(llsurf.Z - llopening.Z);
-                Vector.MemorySafe_CartCoord LLeft = new Vector.MemorySafe_CartCoord(diffX,diffY,0);
+                Vector.MemorySafe_CartCoord LLeft = new Vector.MemorySafe_CartCoord(diffX, diffY, 0);
                 cp = makegbCartesianPt(LLeft);
             }
 
@@ -985,7 +1031,7 @@ namespace gbXMLSerializer
                             llopening.Y = openingcoords[occount].Y;
                             llopening.Z = openingcoords[occount].Z;
                             opindex = occount;
-                                
+
                         }
                     }
                 }
